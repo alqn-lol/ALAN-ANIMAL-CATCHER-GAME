@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alan Animal Catcher</title>
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="top-bar">
+      <h1>Alan Animal Catcher</h1>
+      <div class="stats">
+        <span>Score: <strong id="score">0</strong></span>
+        <span>Best: <strong id="best-score">0</strong></span>
+        <span>Lives: <strong id="lives">3</strong></span>
+        <span>Time: <strong id="time">60</strong>s</span>
+      </div>
+      <div class="controls">
+        <label for="mode-select">Mode</label>
+        <select id="mode-select">
+          <option value="easy">Easy</option>
+          <option value="normal" selected>Normal</option>
+          <option value="hard">Hard</option>
+          <option value="daily">Daily Challenge</option>
+        </select>
+        <label class="sound-control"><input id="mute-toggle" type="checkbox" />Mute</label>
+        <label for="volume-range">Vol</label>
+        <input id="volume-range" type="range" min="0" max="100" value="45" />
+        <button id="pause-btn" type="button" disabled>Pause</button>
+      </div>
+    </header>
+
+    <section class="game-wrap">
+      <canvas id="game" width="900" height="520" aria-label="Animal Catcher game area"></canvas>
+      <div id="boss-banner" class="boss-banner" aria-live="polite"></div>
+      <div id="coach-message" class="coach-message" aria-live="polite"></div>
+      <div id="overlay" class="overlay show">
+        <h2 id="overlay-title">Ready?</h2>
+        <p id="overlay-text">Move with Left/Right arrow keys or A/D to catch animals.</p>
+        <div id="shop-panel" class="shop-panel" hidden>
+          <div class="shop-row">
+            <button id="buy-platform-btn" type="button">Bigger Platform - 80</button>
+            <button id="buy-shield-btn" type="button">Longer Shield - 70</button>
+            <button id="buy-spawn-btn" type="button">Slower Spawns - 90</button>
+          </div>
+          <p id="shop-status" class="shop-status"></p>
+        </div>
+        <div class="overlay-actions">
+          <button id="start-btn" type="button">Start Animal Catcher</button>
+          <button id="resume-btn" type="button" hidden>Continue</button>
+          <button id="retry-btn" type="button" hidden>Retry</button>
+          <button id="exit-btn" type="button" hidden>Exit</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="help">
+      <p>Goal: Catch animals, avoid rotten animals. Golden animals are bonus points.</p>
+      <div id="achievements" class="achievement-strip" aria-live="polite"></div>
+    </footer>
+  </main>
+
+  <script src="./src/game.js"></script>
+</body>
+</html>

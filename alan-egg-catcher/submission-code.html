@@ -1,0 +1,1599 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alan Animal Catcher - Code Export</title>
+  <style>
+    :root {
+      color-scheme: light;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f1e8;
+      color: #222;
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fffdf8;
+      border: 1px solid #d8d0c2;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+    .note {
+      margin: 0;
+      line-height: 1.5;
+      color: #4b443b;
+    }
+    .file-block {
+      margin: 18px 0 28px;
+      break-inside: avoid;
+    }
+    .file-block h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #2d2a26;
+    }
+    pre {
+      margin: 0;
+      padding: 18px;
+      overflow: auto;
+      white-space: pre;
+      background: #111827;
+      color: #e5e7eb;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    code {
+      font-family: Consolas, Monaco, 'Courier New', monospace;
+    }
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .card {
+        box-shadow: none;
+        border-radius: 0;
+        border: 0;
+      }
+      pre {
+        background: #fff;
+        color: #000;
+        border: 1px solid #bbb;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="card">
+      <h1>Alan Animal Catcher - Submission Code Export</h1>
+      <p class="note">This page contains the main game files in one place so you can review or print them for AP Classroom. To make a PDF, open this file in the browser and use Print, then choose Save as PDF.</p>
+    </section>
+    
+    <section class="file-block">
+      <h2>index.html</h2>
+      <pre><code>&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot; /&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+  &lt;title&gt;Alan Animal Catcher&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;./src/styles.css&quot; /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;main class=&quot;app&quot;&gt;
+    &lt;header class=&quot;top-bar&quot;&gt;
+      &lt;h1&gt;Alan Animal Catcher&lt;/h1&gt;
+      &lt;div class=&quot;stats&quot;&gt;
+        &lt;span&gt;Score: &lt;strong id=&quot;score&quot;&gt;0&lt;/strong&gt;&lt;/span&gt;
+        &lt;span&gt;Best: &lt;strong id=&quot;best-score&quot;&gt;0&lt;/strong&gt;&lt;/span&gt;
+        &lt;span&gt;Lives: &lt;strong id=&quot;lives&quot;&gt;3&lt;/strong&gt;&lt;/span&gt;
+        &lt;span&gt;Time: &lt;strong id=&quot;time&quot;&gt;60&lt;/strong&gt;s&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;controls&quot;&gt;
+        &lt;label for=&quot;mode-select&quot;&gt;Mode&lt;/label&gt;
+        &lt;select id=&quot;mode-select&quot;&gt;
+          &lt;option value=&quot;easy&quot;&gt;Easy&lt;/option&gt;
+          &lt;option value=&quot;normal&quot; selected&gt;Normal&lt;/option&gt;
+          &lt;option value=&quot;hard&quot;&gt;Hard&lt;/option&gt;
+          &lt;option value=&quot;daily&quot;&gt;Daily Challenge&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;label class=&quot;sound-control&quot;&gt;&lt;input id=&quot;mute-toggle&quot; type=&quot;checkbox&quot; /&gt;Mute&lt;/label&gt;
+        &lt;label for=&quot;volume-range&quot;&gt;Vol&lt;/label&gt;
+        &lt;input id=&quot;volume-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;100&quot; value=&quot;45&quot; /&gt;
+        &lt;button id=&quot;pause-btn&quot; type=&quot;button&quot; disabled&gt;Pause&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;section class=&quot;game-wrap&quot;&gt;
+      &lt;canvas id=&quot;game&quot; width=&quot;900&quot; height=&quot;520&quot; aria-label=&quot;Animal Catcher game area&quot;&gt;&lt;/canvas&gt;
+      &lt;div id=&quot;boss-banner&quot; class=&quot;boss-banner&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
+      &lt;div id=&quot;coach-message&quot; class=&quot;coach-message&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
+      &lt;div id=&quot;overlay&quot; class=&quot;overlay show&quot;&gt;
+        &lt;h2 id=&quot;overlay-title&quot;&gt;Ready?&lt;/h2&gt;
+        &lt;p id=&quot;overlay-text&quot;&gt;Move with Left/Right arrow keys or A/D to catch animals.&lt;/p&gt;
+        &lt;div id=&quot;shop-panel&quot; class=&quot;shop-panel&quot; hidden&gt;
+          &lt;div class=&quot;shop-row&quot;&gt;
+            &lt;button id=&quot;buy-platform-btn&quot; type=&quot;button&quot;&gt;Bigger Platform - 80&lt;/button&gt;
+            &lt;button id=&quot;buy-shield-btn&quot; type=&quot;button&quot;&gt;Longer Shield - 70&lt;/button&gt;
+            &lt;button id=&quot;buy-spawn-btn&quot; type=&quot;button&quot;&gt;Slower Spawns - 90&lt;/button&gt;
+          &lt;/div&gt;
+          &lt;p id=&quot;shop-status&quot; class=&quot;shop-status&quot;&gt;&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;overlay-actions&quot;&gt;
+          &lt;button id=&quot;start-btn&quot; type=&quot;button&quot;&gt;Start Animal Catcher&lt;/button&gt;
+          &lt;button id=&quot;resume-btn&quot; type=&quot;button&quot; hidden&gt;Continue&lt;/button&gt;
+          &lt;button id=&quot;retry-btn&quot; type=&quot;button&quot; hidden&gt;Retry&lt;/button&gt;
+          &lt;button id=&quot;exit-btn&quot; type=&quot;button&quot; hidden&gt;Exit&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;footer class=&quot;help&quot;&gt;
+      &lt;p&gt;Goal: Catch animals, avoid rotten animals. Golden animals are bonus points.&lt;/p&gt;
+      &lt;div id=&quot;achievements&quot; class=&quot;achievement-strip&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
+    &lt;/footer&gt;
+  &lt;/main&gt;
+
+  &lt;script src=&quot;./src/game.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+    </section>
+
+    <section class="file-block">
+      <h2>src/game.js</h2>
+      <pre><code>(function () {
+  const canvas = document.getElementById(&quot;game&quot;);
+  const ctx = canvas.getContext(&quot;2d&quot;);
+
+  const scoreEl = document.getElementById(&quot;score&quot;);
+  const bestScoreEl = document.getElementById(&quot;best-score&quot;);
+  const livesEl = document.getElementById(&quot;lives&quot;);
+  const timeEl = document.getElementById(&quot;time&quot;);
+  const overlay = document.getElementById(&quot;overlay&quot;);
+  const overlayTitle = document.getElementById(&quot;overlay-title&quot;);
+  const overlayText = document.getElementById(&quot;overlay-text&quot;);
+  const coachMessageEl = document.getElementById(&quot;coach-message&quot;);
+  const bossBannerEl = document.getElementById(&quot;boss-banner&quot;);
+  const shopPanelEl = document.getElementById(&quot;shop-panel&quot;);
+  const shopStatusEl = document.getElementById(&quot;shop-status&quot;);
+  const achievementsEl = document.getElementById(&quot;achievements&quot;);
+  const startBtn = document.getElementById(&quot;start-btn&quot;);
+  const resumeBtn = document.getElementById(&quot;resume-btn&quot;);
+  const retryBtn = document.getElementById(&quot;retry-btn&quot;);
+  const exitBtn = document.getElementById(&quot;exit-btn&quot;);
+  const pauseBtn = document.getElementById(&quot;pause-btn&quot;);
+  const modeSelect = document.getElementById(&quot;mode-select&quot;);
+  const muteToggle = document.getElementById(&quot;mute-toggle&quot;);
+  const volumeRange = document.getElementById(&quot;volume-range&quot;);
+  const buyPlatformBtn = document.getElementById(&quot;buy-platform-btn&quot;);
+  const buyShieldBtn = document.getElementById(&quot;buy-shield-btn&quot;);
+  const buySpawnBtn = document.getElementById(&quot;buy-spawn-btn&quot;);
+  const bestScoreStorageKey = &quot;alanEggCatcherBestScore&quot;;
+  const settingsStorageKey = &quot;alanEggCatcherSettings&quot;;
+  const upgradesStorageKey = &quot;alanEggCatcherUpgrades&quot;;
+  const achievementsStorageKey = &quot;alanEggCatcherAchievements&quot;;
+  const dailyBestStoragePrefix = &quot;alanEggCatcherDailyBest&quot;;
+  let bestScore = 0;
+  let coachMessageTimer = 0;
+  let audioContext = null;
+  const catchMessages = [&quot;Good Job!&quot;, &quot;Yes!&quot;, &quot;So Close!&quot;, &quot;Nice catch!&quot;, &quot;Great save!&quot;];
+  const animalSpecies = {
+    normal: [&quot;bunny&quot;, &quot;chick&quot;, &quot;puppy&quot;, &quot;kitten&quot;],
+    gold: [&quot;golden_bunny&quot;, &quot;golden_chick&quot;],
+    rotten: [&quot;raccoon&quot;, &quot;skunk&quot;],
+    slow: [&quot;owl&quot;],
+    shield: [&quot;turtle&quot;],
+    multi: [&quot;fox&quot;],
+    boss: [&quot;bear&quot;],
+  };
+  const animalLabels = {
+    bunny: &quot;bunny&quot;,
+    chick: &quot;chick&quot;,
+    puppy: &quot;puppy&quot;,
+    kitten: &quot;kitten&quot;,
+    golden_bunny: &quot;golden bunny&quot;,
+    golden_chick: &quot;golden chick&quot;,
+    raccoon: &quot;raccoon&quot;,
+    skunk: &quot;skunk&quot;,
+    owl: &quot;owl&quot;,
+    turtle: &quot;turtle&quot;,
+    fox: &quot;fox&quot;,
+    bear: &quot;bear&quot;,
+  };
+  const animalPluralLabels = {
+    bunny: &quot;bunnies&quot;,
+    chick: &quot;chicks&quot;,
+    puppy: &quot;puppies&quot;,
+    kitten: &quot;kittens&quot;,
+    golden_bunny: &quot;golden bunnies&quot;,
+    golden_chick: &quot;golden chicks&quot;,
+    raccoon: &quot;raccoons&quot;,
+    skunk: &quot;skunks&quot;,
+    owl: &quot;owls&quot;,
+    turtle: &quot;turtles&quot;,
+    fox: &quot;foxes&quot;,
+    bear: &quot;bears&quot;,
+  };
+  const modeConfigs = {
+    easy: {
+      duration: 70,
+      lives: 4,
+      basketSpeed: 560,
+      spawnEvery: 0.72,
+      minSpawnEvery: 0.48,
+      speedMin: 125,
+      speedMax: 190,
+      speedBoost: 28,
+      rottenChance: 0.07,
+      slowChance: 0.05,
+      goldChance: 0.08,
+      shieldChance: 0.08,
+      multiChance: 0.05,
+    },
+    normal: {
+      duration: 60,
+      lives: 3,
+      basketSpeed: 500,
+      spawnEvery: 0.58,
+      minSpawnEvery: 0.42,
+      speedMin: 140,
+      speedMax: 220,
+      speedBoost: 34,
+      rottenChance: 0.10,
+      slowChance: 0.04,
+      goldChance: 0.06,
+      shieldChance: 0.05,
+      multiChance: 0.04,
+    },
+    hard: {
+      duration: 55,
+      lives: 3,
+      basketSpeed: 470,
+      spawnEvery: 0.5,
+      minSpawnEvery: 0.35,
+      speedMin: 160,
+      speedMax: 250,
+      speedBoost: 42,
+      rottenChance: 0.13,
+      slowChance: 0.03,
+      goldChance: 0.05,
+      shieldChance: 0.04,
+      multiChance: 0.04,
+    },
+    daily: {
+      duration: 60,
+      lives: 3,
+      basketSpeed: 500,
+      spawnEvery: 0.58,
+      minSpawnEvery: 0.42,
+      speedMin: 140,
+      speedMax: 220,
+      speedBoost: 34,
+      rottenChance: 0.10,
+      slowChance: 0.04,
+      goldChance: 0.06,
+      shieldChance: 0.05,
+      multiChance: 0.04,
+    },
+  };
+  function saveBestScore(value) {
+    bestScore = Math.max(bestScore, value);
+    try {
+      window.localStorage.setItem(bestScoreStorageKey, String(bestScore));
+    } catch (error) {
+      // Ignore storage failures in restricted browser modes.
+    }
+  }
+
+  function loadBestScore() {
+    try {
+      const storedValue = Number(window.localStorage.getItem(bestScoreStorageKey));
+      bestScore = Number.isFinite(storedValue) &amp;&amp; storedValue &gt; 0 ? storedValue : 0;
+    } catch (error) {
+      bestScore = 0;
+    }
+  }
+
+  function loadJson(key, fallback) {
+    try {
+      const rawValue = window.localStorage.getItem(key);
+      if (!rawValue) return fallback;
+      return Object.assign({}, fallback, JSON.parse(rawValue));
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function saveJson(key, value) {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      // ignore
+    }
+  }
+
+  function getDailySeed() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, &quot;0&quot;);
+    const day = String(now.getDate()).padStart(2, &quot;0&quot;);
+    return `${year}${month}${day}`;
+  }
+
+  function makeSeededRng(seedText) {
+    let seed = 2166136261;
+    for (let i = 0; i &lt; seedText.length; i++) {
+      seed ^= seedText.charCodeAt(i);
+      seed = Math.imul(seed, 16777619);
+    }
+    return function () {
+      seed += seed &lt;&lt; 13;
+      seed ^= seed &gt;&gt;&gt; 7;
+      seed += seed &lt;&lt; 3;
+      seed ^= seed &gt;&gt;&gt; 17;
+      seed += seed &lt;&lt; 5;
+      return ((seed &gt;&gt;&gt; 0) % 1000000) / 1000000;
+    };
+  }
+
+  const state = {
+    running: false,
+    paused: false,
+    phase: &quot;ready&quot;,
+    mode: &quot;normal&quot;,
+    score: 0,
+    lives: 3,
+    duration: 60,
+    timeLeft: 60,
+    basketX: canvas.width / 2,
+    basketY: canvas.height - 45,
+    basketSpeed: 500,
+    basketWidth: 155,
+    basketHeight: 22,
+    keys: { left: false, right: false },
+    eggs: [],
+    particles: [],
+    comboCount: 0,
+    comboTimer: 0,
+    maxCombo: 0,
+    totalGoldCaught: 0,
+    caughtAnimals: {},
+    caughtAnimalTotal: 0,
+    shieldCharges: 0,
+    shopCredits: 0,
+    dailySeed: &quot;&quot;,
+    dailyBest: 0,
+    rng: Math.random,
+    settings: { muted: false, volume: 0.45 },
+    upgrades: { platform: 0, shield: 0, spawn: 0 },
+    achievements: { combo10: false, noMiss: false, gold5: false, boss: false, daily: false },
+    // track non-rotten missed eggs; every 3 misses -&gt; -1 life
+    missedEggsSinceLifeLoss: 0,
+    // power-up state
+    powerUps: { multi: { active: false, expires: 0 }, slow: { active: false, expires: 0 } },
+    goldenEggsCollected: 0,
+    bossWave: { active: false, endsAt: 0, nextAt: 20, bossSpawned: false },
+    spawnTimer: 0,
+    spawnEvery: 0.55,
+    totalTime: 0,
+    lastTickMs: 0,
+  };
+
+  function rand(min, max) {
+    return state.rng() * (max - min) + min;
+  }
+
+  function recordCaughtAnimal(species) {
+    const label = species || &quot;bunny&quot;;
+    state.caughtAnimals[label] = (state.caughtAnimals[label] || 0) + 1;
+    state.caughtAnimalTotal += 1;
+  }
+
+  function getCaughtAnimalSummary() {
+    const entries = Object.entries(state.caughtAnimals)
+      .filter(([, count]) =&gt; count &gt; 0)
+      .map(([species, count]) =&gt; {
+        const singular = animalLabels[species] || species;
+        const plural = animalPluralLabels[species] || `${singular}s`;
+        return `${count} ${count === 1 ? singular : plural}`;
+      });
+    if (!entries.length) return &quot;You didn't catch any animals.&quot;;
+    if (entries.length === 1) return `You caught ${entries[0]}.`;
+    const lastEntry = entries.pop();
+    return `You caught ${entries.join(&quot;, &quot;)} and ${lastEntry}.`;
+  }
+
+  function loadSavedData() {
+    state.settings = loadJson(settingsStorageKey, state.settings);
+    state.upgrades = loadJson(upgradesStorageKey, state.upgrades);
+    state.achievements = loadJson(achievementsStorageKey, state.achievements);
+    loadBestScore();
+    if (muteToggle) muteToggle.checked = Boolean(state.settings.muted);
+    if (volumeRange) volumeRange.value = String(Math.round((state.settings.volume || 0.45) * 100));
+    renderAchievements();
+    updateShopButtons();
+  }
+
+  function getModeConfig() {
+    if (state.mode === &quot;daily&quot;) return modeConfigs.daily;
+    return modeConfigs[state.mode] || modeConfigs.normal;
+  }
+
+  function getDailyBestKey() {
+    return `${dailyBestStoragePrefix}:${state.dailySeed || getDailySeed()}`;
+  }
+
+  function loadDailyBest(seedText) {
+    try {
+      const storedValue = Number(window.localStorage.getItem(`${dailyBestStoragePrefix}:${seedText}`));
+      return Number.isFinite(storedValue) &amp;&amp; storedValue &gt; 0 ? storedValue : 0;
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  function saveDailyBest(seedText, value) {
+    try {
+      const currentValue = loadDailyBest(seedText);
+      const nextValue = Math.max(currentValue, value);
+      window.localStorage.setItem(`${dailyBestStoragePrefix}:${seedText}`, String(nextValue));
+      state.dailyBest = nextValue;
+    } catch (error) {
+      state.dailyBest = Math.max(state.dailyBest || 0, value);
+    }
+  }
+
+  function saveSettings() {
+    saveJson(settingsStorageKey, state.settings);
+  }
+
+  function saveUpgrades() {
+    saveJson(upgradesStorageKey, state.upgrades);
+  }
+
+  function saveAchievements() {
+    saveJson(achievementsStorageKey, state.achievements);
+  }
+
+  function renderAchievements() {
+    if (!achievementsEl) return;
+    const labels = [];
+    if (state.achievements.combo10) labels.push(&quot;Combo Master&quot;);
+    if (state.achievements.noMiss) labels.push(&quot;Flawless Finish&quot;);
+    if (state.achievements.gold5) labels.push(&quot;Gold Hunter&quot;);
+    if (state.achievements.boss) labels.push(&quot;Boss Buster&quot;);
+    if (state.achievements.daily) labels.push(&quot;Daily Champion&quot;);
+    achievementsEl.innerHTML = labels.length
+      ? labels.map((label) =&gt; `&lt;span class=&quot;achievement-chip&quot;&gt;${label}&lt;/span&gt;`).join(&quot;&quot;)
+      : '&lt;span class=&quot;achievement-chip&quot;&gt;Achievements appear here&lt;/span&gt;';
+  }
+
+  function unlockAchievement(key, label) {
+    if (state.achievements[key]) return;
+    state.achievements[key] = true;
+    saveAchievements();
+    renderAchievements();
+    setCoachMessage(label);
+  }
+
+  function updateShopButtons() {
+    if (!shopStatusEl) return;
+    shopStatusEl.textContent = `Credits: ${state.shopCredits} | Platform +${state.upgrades.platform} | Shield +${state.upgrades.shield} | Spawn +${state.upgrades.spawn}`;
+    if (buyPlatformBtn) buyPlatformBtn.disabled = state.shopCredits &lt; 80 || state.upgrades.platform &gt;= 3;
+    if (buyShieldBtn) buyShieldBtn.disabled = state.shopCredits &lt; 70 || state.upgrades.shield &gt;= 3;
+    if (buySpawnBtn) buySpawnBtn.disabled = state.shopCredits &lt; 90 || state.upgrades.spawn &gt;= 3;
+  }
+
+  function purchaseUpgrade(kind) {
+    const costs = { platform: 80, shield: 70, spawn: 90 };
+    if (kind === &quot;platform&quot; &amp;&amp; state.shopCredits &gt;= costs.platform &amp;&amp; state.upgrades.platform &lt; 3) {
+      state.shopCredits -= costs.platform;
+      state.upgrades.platform += 1;
+      saveUpgrades();
+      setCoachMessage(&quot;Bigger platform unlocked!&quot;);
+      playPowerUpSound();
+    }
+    if (kind === &quot;shield&quot; &amp;&amp; state.shopCredits &gt;= costs.shield &amp;&amp; state.upgrades.shield &lt; 3) {
+      state.shopCredits -= costs.shield;
+      state.upgrades.shield += 1;
+      saveUpgrades();
+      setCoachMessage(&quot;Shield lasts longer!&quot;);
+      playPowerUpSound();
+    }
+    if (kind === &quot;spawn&quot; &amp;&amp; state.shopCredits &gt;= costs.spawn &amp;&amp; state.upgrades.spawn &lt; 3) {
+      state.shopCredits -= costs.spawn;
+      state.upgrades.spawn += 1;
+      saveUpgrades();
+      setCoachMessage(&quot;Eggs slow down a bit!&quot;);
+      playPowerUpSound();
+    }
+    updateShopButtons();
+    updateHud();
+  }
+
+  function getBasketWidth() {
+    return 155 + state.upgrades.platform * 12;
+  }
+
+  function getShieldChargeGain() {
+    return 1 + state.upgrades.shield;
+  }
+
+  function getSpawnConfig() {
+    const config = getModeConfig();
+    const spawnReduction = state.upgrades.spawn * 0.04;
+    return {
+      spawnEvery: Math.max(0.3, config.spawnEvery - spawnReduction),
+      minSpawnEvery: Math.max(0.2, config.minSpawnEvery - spawnReduction * 0.7),
+      speedMin: config.speedMin,
+      speedMax: config.speedMax,
+      speedBoost: config.speedBoost,
+      rottenChance: config.rottenChance,
+      slowChance: config.slowChance,
+      goldChance: config.goldChance,
+      shieldChance: config.shieldChance,
+      multiChance: config.multiChance,
+    };
+  }
+
+  function ensureAudioContext() {
+    const AudioCtor = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtor) return null;
+    if (!audioContext) audioContext = new AudioCtor();
+    if (audioContext.state === &quot;suspended&quot;) audioContext.resume();
+    return audioContext;
+  }
+
+  function playTone(frequency, duration, type, volume, frequencyEnd) {
+    const context = ensureAudioContext();
+    if (!context) return;
+    const effectiveVolume = state.settings.muted ? 0 : Math.max(0, Math.min(1, state.settings.volume || 0.45));
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
+    oscillator.type = type || &quot;sine&quot;;
+    oscillator.frequency.setValueAtTime(frequency, context.currentTime);
+    if (frequencyEnd) {
+      oscillator.frequency.exponentialRampToValueAtTime(frequencyEnd, context.currentTime + duration);
+    }
+    gainNode.gain.setValueAtTime((volume || 0.05) * effectiveVolume, context.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + duration);
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+    oscillator.start();
+    oscillator.stop(context.currentTime + duration + 0.03);
+  }
+
+  function playCatchSound(kind) {
+    if (kind === &quot;gold&quot;) { playTone(880, 0.08, &quot;triangle&quot;, 0.05, 1240); return; }
+    if (kind === &quot;shield&quot;) { playTone(660, 0.09, &quot;sine&quot;, 0.045, 990); return; }
+    if (kind === &quot;multi&quot;) { playTone(740, 0.08, &quot;square&quot;, 0.04, 930); return; }
+    if (kind === &quot;slow&quot;) { playTone(520, 0.08, &quot;triangle&quot;, 0.04, 680); return; }
+    playTone(620, 0.07, &quot;sine&quot;, 0.04, 860);
+  }
+
+  function playMissSound() {
+    playTone(220, 0.13, &quot;sawtooth&quot;, 0.04, 160);
+  }
+
+  function playPowerUpSound() {
+    playTone(784, 0.09, &quot;triangle&quot;, 0.05, 1046);
+  }
+
+  function playGameOverSound() {
+    playTone(240, 0.12, &quot;sawtooth&quot;, 0.04, 120);
+  }
+
+  function playPauseSound() {
+    playTone(480, 0.05, &quot;square&quot;, 0.02, 380);
+  }
+
+  function resetCombo() {
+    state.comboCount = 0;
+    state.comboTimer = 0;
+  }
+
+  function pickAnimalSpecies(kind) {
+    const options = animalSpecies[kind] || animalSpecies.normal;
+    return options[Math.floor(rand(0, options.length))];
+  }
+
+  function registerCatch(kind) {
+    if (kind === &quot;rotten&quot;) {
+      resetCombo();
+      return 0;
+    }
+    state.comboCount = state.comboTimer &gt; 0 ? state.comboCount + 1 : 1;
+    state.comboTimer = 1.25;
+    state.maxCombo = Math.max(state.maxCombo, state.comboCount);
+    return Math.max(0, (state.comboCount - 1) * 3);
+  }
+
+  function updateOverlayButtons(mode) {
+    const currentMode = mode || &quot;ready&quot;;
+    startBtn.hidden = currentMode !== &quot;ready&quot;;
+    resumeBtn.hidden = !(currentMode === &quot;paused&quot; || currentMode === &quot;shop&quot; || currentMode === &quot;gameover&quot;);
+    retryBtn.hidden = true;
+    exitBtn.hidden = currentMode === &quot;ready&quot;;
+    if (shopPanelEl) shopPanelEl.hidden = currentMode !== &quot;shop&quot;;
+    if (pauseBtn) pauseBtn.textContent = state.paused ? &quot;Resume&quot; : &quot;Pause&quot;;
+    if (currentMode === &quot;paused&quot; &amp;&amp; resumeBtn) resumeBtn.textContent = &quot;Continue&quot;;
+    if (currentMode === &quot;shop&quot; &amp;&amp; resumeBtn) resumeBtn.textContent = &quot;Start Next Round&quot;;
+    if (currentMode === &quot;gameover&quot; &amp;&amp; resumeBtn) resumeBtn.textContent = &quot;Continue&quot;;
+  }
+
+  function showPausedOverlay() {
+    overlayTitle.textContent = &quot;Paused&quot;;
+    overlayText.textContent = &quot;Press Continue or P to keep guiding the wildlife basket.&quot;;
+    updateOverlayButtons(&quot;paused&quot;);
+    showOverlay();
+  }
+
+  function showShopOverlay() {
+    overlayTitle.textContent = state.lives &gt; 0 ? &quot;Shop&quot; : &quot;Game Over Shop&quot;;
+    overlayText.textContent = state.mode === &quot;daily&quot;
+      ? `Daily score: ${state.score}. Daily best: ${state.dailyBest}. Spend credits before the next round.`
+      : `Round score: ${state.score}. Spend credits before the next round.`;
+    updateOverlayButtons(&quot;shop&quot;);
+    updateShopButtons();
+    showOverlay();
+  }
+
+  function setPaused(paused) {
+    if (!state.running) return;
+    state.paused = paused;
+    state.phase = paused ? &quot;paused&quot; : &quot;playing&quot;;
+    if (pauseBtn) pauseBtn.textContent = paused ? &quot;Resume&quot; : &quot;Pause&quot;;
+    if (paused) {
+      playPauseSound();
+      showPausedOverlay();
+    } else {
+      hideOverlay();
+    }
+  }
+
+  function togglePause() {
+    setPaused(!state.paused);
+  }
+
+  function startGame() {
+    state.mode = modeSelect ? modeSelect.value : &quot;normal&quot;;
+    const config = getModeConfig();
+    state.phase = &quot;playing&quot;;
+    state.running = true;
+    state.paused = false;
+    state.score = 0;
+    state.lives = config.lives;
+    state.duration = config.duration;
+    state.timeLeft = config.duration;
+    state.totalTime = 0;
+    state.eggs = [];
+    state.particles = [];
+    state.comboCount = 0;
+    state.comboTimer = 0;
+    state.maxCombo = 0;
+    state.totalGoldCaught = 0;
+    state.caughtAnimals = {};
+    state.caughtAnimalTotal = 0;
+    state.shieldCharges = 0;
+    state.missedEggsSinceLifeLoss = 0;
+    state.goldenEggsCollected = 0;
+    state.powerUps.multi.active = false; state.powerUps.multi.expires = 0;
+    state.powerUps.slow.active = false; state.powerUps.slow.expires = 0;
+    state.spawnTimer = 0;
+    state.basketX = canvas.width / 2;
+    state.dailySeed = state.mode === &quot;daily&quot; ? getDailySeed() : &quot;&quot;;
+    state.dailyBest = state.mode === &quot;daily&quot; ? loadDailyBest(state.dailySeed) : 0;
+    state.rng = state.mode === &quot;daily&quot; ? makeSeededRng(state.dailySeed) : Math.random;
+    state.basketSpeed = config.basketSpeed;
+    state.basketWidth = getBasketWidth();
+    const spawnConfig = getSpawnConfig();
+    state.spawnEvery = spawnConfig.spawnEvery;
+    state.bossWave = { active: false, endsAt: 0, nextAt: 20, bossSpawned: false };
+    state.lastTickMs = performance.now();
+    setCoachMessage(&quot;&quot;);
+    bossBannerEl.classList.remove(&quot;show&quot;);
+    updateOverlayButtons(&quot;ready&quot;);
+    if (pauseBtn) pauseBtn.disabled = false;
+    ensureAudioContext();
+    updateShopButtons();
+    updateHud();
+    hideOverlay();
+    requestAnimationFrame(loop);
+  }
+
+  function returnToReadyScreen() {
+    state.running = false;
+    state.paused = false;
+    state.phase = &quot;ready&quot;;
+    state.eggs = [];
+    state.particles = [];
+    resetCombo();
+    overlayTitle.textContent = &quot;Ready?&quot;;
+    overlayText.textContent = &quot;Move with Left/Right arrow keys or A/D to catch animals. Daily Challenge uses one shared seed for the day.&quot;;
+    updateOverlayButtons(&quot;ready&quot;);
+    if (pauseBtn) pauseBtn.textContent = &quot;Pause&quot;;
+    if (pauseBtn) pauseBtn.disabled = true;
+    startBtn.textContent = &quot;Start Animal Catcher&quot;;
+    setCoachMessage(&quot;&quot;);
+    bossBannerEl.classList.remove(&quot;show&quot;);
+    showOverlay();
+    render();
+  }
+
+  function setCoachMessage(text) {
+    if (!coachMessageEl) return;
+    coachMessageEl.textContent = text;
+    coachMessageEl.classList.toggle(&quot;show&quot;, Boolean(text));
+    coachMessageTimer = text ? 1.4 : 0;
+  }
+
+  function drawAnimalSilhouette(x, y, type, scale = 1, color = &quot;#3c4653&quot;) {
+    ctx.fillStyle = color;
+    if (type === &quot;bunny&quot;) {
+      ctx.beginPath(); ctx.ellipse(x, y, 16 * scale, 11 * scale, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x - 10 * scale, y - 20 * scale, 4 * scale, 12 * scale, -0.2, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x + 6 * scale, y - 18 * scale, 4 * scale, 12 * scale, 0.25, 0, Math.PI * 2); ctx.fill();
+    } else if (type === &quot;fox&quot;) {
+      ctx.beginPath(); ctx.moveTo(x - 18 * scale, y + 8 * scale); ctx.lineTo(x, y - 10 * scale); ctx.lineTo(x + 18 * scale, y + 8 * scale); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x, y, 14 * scale, 10 * scale, 0, 0, Math.PI * 2); ctx.fill();
+    } else if (type === &quot;bird&quot;) {
+      ctx.beginPath(); ctx.arc(x, y, 6 * scale, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x - 6 * scale, y + 1 * scale); ctx.lineTo(x - 18 * scale, y - 4 * scale); ctx.lineTo(x - 8 * scale, y + 7 * scale); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x + 6 * scale, y + 1 * scale); ctx.lineTo(x + 18 * scale, y - 4 * scale); ctx.lineTo(x + 8 * scale, y + 7 * scale); ctx.fill();
+    } else if (type === &quot;cat&quot;) {
+      ctx.beginPath(); ctx.ellipse(x, y, 15 * scale, 11 * scale, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x - 11 * scale, y - 5 * scale); ctx.lineTo(x - 5 * scale, y - 18 * scale); ctx.lineTo(x - 1 * scale, y - 4 * scale); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x + 11 * scale, y - 5 * scale); ctx.lineTo(x + 5 * scale, y - 18 * scale); ctx.lineTo(x + 1 * scale, y - 4 * scale); ctx.fill();
+    }
+  }
+
+  function endGame() {
+    state.running = false;
+    state.paused = false;
+    state.phase = &quot;shop&quot;;
+    saveBestScore(state.score);
+    playGameOverSound();
+    const won = state.lives &gt; 0;
+    if (won &amp;&amp; state.missedEggsSinceLifeLoss === 0) unlockAchievement(&quot;noMiss&quot;, &quot;Flawless Finish!&quot;);
+    if (state.maxCombo &gt;= 10) unlockAchievement(&quot;combo10&quot;, &quot;Combo Master!&quot;);
+    if (state.totalGoldCaught &gt;= 5) unlockAchievement(&quot;gold5&quot;, &quot;Gold Hunter!&quot;);
+    if (state.mode === &quot;daily&quot;) {
+      const previousDailyBest = state.dailyBest;
+      saveDailyBest(state.dailySeed, state.score);
+      if (state.score &gt; previousDailyBest) unlockAchievement(&quot;daily&quot;, &quot;Daily Champion!&quot;);
+    }
+    state.shopCredits = state.score;
+    overlayTitle.textContent = won ? &quot;Shop&quot; : &quot;Shop&quot;;
+    overlayText.textContent = won
+      ? &quot;Great run. Spend your score on upgrades, then start the next round.&quot;
+      : &quot;Better luck next time. Spend your score on upgrades, then try again.&quot;;
+    overlayText.textContent += &quot; &quot; + getCaughtAnimalSummary();
+    updateOverlayButtons(&quot;shop&quot;);
+    updateShopButtons();
+    if (pauseBtn) pauseBtn.disabled = true;
+    showOverlay();
+  }
+
+  function showOverlay() {
+    overlay.classList.add(&quot;show&quot;);
+  }
+
+  function hideOverlay() {
+    overlay.classList.remove(&quot;show&quot;);
+  }
+
+  function updateHud() {
+    scoreEl.textContent = String(state.score);
+    bestScoreEl.textContent = String(bestScore);
+    livesEl.textContent = String(state.lives);
+    timeEl.textContent = String(Math.max(0, Math.ceil(state.timeLeft)));
+    if (pauseBtn) pauseBtn.disabled = !state.running || state.phase !== &quot;playing&quot;;
+    if (modeSelect &amp;&amp; state.mode) modeSelect.value = state.mode;
+    if (muteToggle) muteToggle.checked = Boolean(state.settings.muted);
+    if (volumeRange) volumeRange.value = String(Math.round((state.settings.volume || 0.45) * 100));
+  }
+
+  function spawnEgg() {
+    const roll = rand(0, 1);
+    let kind = &quot;normal&quot;;
+    const config = getSpawnConfig();
+    const difficulty = Math.min(1, state.totalTime / Math.max(25, state.duration));
+    const bossWaveBoost = state.bossWave.active ? 0.05 : 0;
+    const rottenChance = Math.max(0.03, config.rottenChance + difficulty * 0.04 - bossWaveBoost);
+    const slowChance = config.slowChance + difficulty * 0.015;
+    const goldChance = config.goldChance + bossWaveBoost;
+    const multiChance = config.multiChance + (state.bossWave.active ? 0.02 : 0);
+    const shieldChance = config.shieldChance + (state.bossWave.active ? 0.03 : 0);
+    // probabilities shift slightly as the round goes on.
+    if (roll &lt; rottenChance) kind = &quot;rotten&quot;;
+    else if (roll &lt; rottenChance + slowChance) kind = &quot;slow&quot;;
+    else if (roll &lt; rottenChance + slowChance + shieldChance) kind = &quot;shield&quot;;
+    else if (roll &gt; 1 - multiChance) kind = &quot;multi&quot;;
+    else if (roll &gt; 1 - multiChance - goldChance) kind = &quot;gold&quot;;
+
+    if (state.bossWave.active &amp;&amp; !state.bossWave.bossSpawned) {
+      kind = &quot;boss&quot;;
+      state.bossWave.bossSpawned = true;
+    }
+
+    const speedBase = kind === &quot;gold&quot; || kind === &quot;boss&quot;
+      ? rand(config.speedMin + 40, config.speedMax + 60)
+      : rand(config.speedMin, config.speedMax);
+    const speed = speedBase + difficulty * config.speedBoost;
+
+    state.eggs.push({
+      x: kind === &quot;boss&quot; ? canvas.width / 2 : rand(20, canvas.width - 20),
+      y: kind === &quot;boss&quot; ? -36 : -20,
+      r: kind === &quot;boss&quot; ? 24 : 12,
+      speed,
+      kind,
+      species: pickAnimalSpecies(kind),
+      wobble: kind === &quot;boss&quot; ? 0.4 : rand(0.6, 2.2),
+      t: rand(0, Math.PI * 2),
+    });
+  }
+
+  function update(dt) {
+    if (!state.running || state.paused) return;
+
+    state.totalTime += dt;
+    state.timeLeft -= dt;
+    state.spawnTimer += dt;
+    if (state.comboTimer &gt; 0) {
+      state.comboTimer = Math.max(0, state.comboTimer - dt);
+      if (state.comboTimer === 0) resetCombo();
+    }
+
+    if (!state.bossWave.active &amp;&amp; state.totalTime &gt;= state.bossWave.nextAt) {
+      state.bossWave.active = true;
+      state.bossWave.endsAt = state.totalTime + 8;
+      state.bossWave.bossSpawned = false;
+      state.bossWave.nextAt += 20;
+      if (bossBannerEl) {
+        bossBannerEl.textContent = &quot;Boss Wave!&quot;;
+        bossBannerEl.classList.add(&quot;show&quot;);
+      }
+      playPowerUpSound();
+    }
+
+    if (state.bossWave.active &amp;&amp; state.totalTime &gt;= state.bossWave.endsAt) {
+      state.bossWave.active = false;
+      if (bossBannerEl) bossBannerEl.classList.remove(&quot;show&quot;);
+    }
+
+    if (state.timeLeft &lt;= 0 || state.lives &lt;= 0) {
+      endGame();
+      return;
+    }
+
+    const config = getSpawnConfig();
+    const difficulty = Math.min(1, state.totalTime / Math.max(25, state.duration));
+    state.spawnEvery = Math.max(config.minSpawnEvery, config.spawnEvery - difficulty * 0.13 - (state.bossWave.active ? 0.05 : 0));
+    state.basketWidth = getBasketWidth();
+
+    if (state.spawnTimer &gt;= state.spawnEvery) {
+      state.spawnTimer = 0;
+      spawnEgg();
+    }
+
+    if (state.keys.left) {
+      state.basketX -= state.basketSpeed * dt;
+    }
+    if (state.keys.right) {
+      state.basketX += state.basketSpeed * dt;
+    }
+
+    const half = state.basketWidth / 2;
+    state.basketX = Math.max(half, Math.min(canvas.width - half, state.basketX));
+
+    for (let i = state.eggs.length - 1; i &gt;= 0; i--) {
+      const egg = state.eggs[i];
+      egg.t += dt * egg.wobble;
+      egg.x += Math.sin(egg.t) * 40 * dt;
+      // Apply slow power-up to fall speed
+      const slowMultiplier = state.powerUps.slow.active ? 0.5 : 1;
+      egg.y += egg.speed * dt * slowMultiplier;
+
+      // If multi power-up active, check additional basket positions
+      const basketOffsets = state.powerUps.multi.active ? [-160, 0, 160] : [0];
+      let inBasketX = false;
+      for (const off of basketOffsets) {
+        const bx = state.basketX + off;
+        if (egg.x &gt; bx - half &amp;&amp; egg.x &lt; bx + half) { inBasketX = true; break; }
+      }
+      const inBasketY = egg.y + egg.r &gt; state.basketY - state.basketHeight;
+
+      if (inBasketX &amp;&amp; inBasketY) {
+        if (egg.kind === &quot;normal&quot;) state.score += 10;
+        if (egg.kind === &quot;gold&quot;) {
+          state.score += 30;
+          state.goldenEggsCollected = (state.goldenEggsCollected || 0) + 1;
+          state.totalGoldCaught += 1;
+          if (state.goldenEggsCollected &gt;= 3) { state.powerUps.multi.active = true; state.powerUps.multi.expires = state.totalTime + 10; state.goldenEggsCollected = 0; }
+          if (state.totalGoldCaught &gt;= 5) unlockAchievement(&quot;gold5&quot;, &quot;Gold Hunter!&quot;);
+        }
+        if (egg.kind === &quot;shield&quot;) { state.shieldCharges += getShieldChargeGain(); }
+        if (egg.kind === &quot;rotten&quot;) { state.score = Math.max(0, state.score - 15); }
+        if (egg.kind === &quot;boss&quot;) {
+          state.score += 80;
+          state.bossWave.active = false;
+          if (bossBannerEl) bossBannerEl.classList.remove(&quot;show&quot;);
+          unlockAchievement(&quot;boss&quot;, &quot;Boss Buster!&quot;);
+          spawnParticles(egg.x, egg.y, &quot;sparkle&quot;, 30);
+          playPowerUpSound();
+        }
+        if (egg.kind === &quot;multi&quot;) { state.powerUps.multi.active = true; state.powerUps.multi.expires = state.totalTime + 10; }
+        if (egg.kind === &quot;slow&quot;) { state.powerUps.slow.active = true; state.powerUps.slow.expires = state.totalTime + 8; }
+        // spawn sparkles on any successful catch
+        spawnParticles(egg.x, egg.y, 'sparkle', 22);
+        // if catching a rotten egg costs a life, spawn a small blood puff
+        if (egg.kind === 'rotten') spawnParticles(egg.x, egg.y, 'blood', 12);
+        if (egg.kind === 'shield') {
+          setCoachMessage(&quot;Shield up!&quot;);
+          playCatchSound(&quot;shield&quot;);
+        } else if (egg.kind === &quot;boss&quot;) {
+          setCoachMessage(&quot;Boss down!&quot;);
+          playCatchSound(&quot;gold&quot;);
+        } else if (egg.kind !== &quot;rotten&quot;) {
+          setCoachMessage(catchMessages[Math.floor(Math.random() * catchMessages.length)]);
+          playCatchSound(egg.kind);
+        }
+        const comboBonus = registerCatch(egg.kind);
+        if (comboBonus &gt; 0) {
+          state.score += comboBonus;
+          setCoachMessage(&quot;Combo x&quot; + state.comboCount + &quot;!&quot;);
+        }
+        recordCaughtAnimal(egg.species || pickAnimalSpecies(egg.kind));
+        if (state.maxCombo &gt;= 10) unlockAchievement(&quot;combo10&quot;, &quot;Combo Master!&quot;);
+        state.eggs.splice(i, 1);
+        continue;
+      }
+
+      if (egg.y - egg.r &gt; canvas.height) {
+        // Missed egg: non-rotten misses increment a counter. Every 3 misses cost 1 life.
+        if (egg.kind !== &quot;rotten&quot; &amp;&amp; egg.kind !== &quot;boss&quot;) {
+          resetCombo();
+          state.missedEggsSinceLifeLoss = (state.missedEggsSinceLifeLoss || 0) + 1;
+          if (state.missedEggsSinceLifeLoss &gt;= 3) {
+            if (state.shieldCharges &gt; 0) {
+              state.shieldCharges -= 1;
+              setCoachMessage(&quot;Shield saved you!&quot;);
+              spawnParticles(egg.x || (canvas.width / 2), canvas.height - 24, 'sparkle', 18);
+              playCatchSound(&quot;shield&quot;);
+            } else {
+              state.lives -= 1;
+              // spawn blood at ground where egg fell
+              spawnParticles(egg.x || (canvas.width/2), canvas.height - 24, 'blood', 20);
+              playMissSound();
+            }
+            state.missedEggsSinceLifeLoss = 0;
+          }
+        } else {
+          resetCombo();
+        }
+        state.eggs.splice(i, 1);
+      }
+    }
+
+    // Expire power-ups
+    if (state.powerUps.multi.active &amp;&amp; state.totalTime &gt;= state.powerUps.multi.expires) state.powerUps.multi.active = false;
+    if (state.powerUps.slow.active &amp;&amp; state.totalTime &gt;= state.powerUps.slow.expires) state.powerUps.slow.active = false;
+
+    if (state.score &gt; bestScore) {
+      saveBestScore(state.score);
+    }
+
+    if (state.mode === &quot;daily&quot; &amp;&amp; state.score &gt; state.dailyBest) {
+      state.dailyBest = state.score;
+      saveDailyBest(state.dailySeed, state.score);
+    }
+
+    // update particles
+    updateParticles(dt);
+
+    if (coachMessageTimer &gt; 0) {
+      coachMessageTimer -= dt;
+      if (coachMessageTimer &lt;= 0) setCoachMessage(&quot;&quot;);
+    }
+
+    updateHud();
+  }
+
+  function drawBackground() {
+    // Soft, desaturated sky gradient
+    const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    g.addColorStop(0, '#0f1620');
+    g.addColorStop(0.35, '#26313a');
+    g.addColorStop(0.72, '#48434a');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // moon and drifting clouds for extra motion
+    ctx.fillStyle = 'rgba(245, 235, 220, 0.26)';
+    ctx.beginPath(); ctx.arc(canvas.width - 110, 70, 30, 0, Math.PI * 2); ctx.fill();
+    for (let i = 0; i &lt; 4; i++) {
+      const cloudX = (canvas.width + 220 - ((state.totalTime * 16 + i * 190) % (canvas.width + 280)));
+      const cloudY = 70 + i * 30;
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+      ctx.beginPath();
+      ctx.ellipse(cloudX, cloudY, 48, 16, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cloudX + 30, cloudY + 4, 38, 12, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cloudX - 28, cloudY + 3, 32, 10, 0, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Distant misty hills
+    ctx.fillStyle = 'rgba(35,38,44,0.26)'; ctx.fillRect(0, canvas.height - 200, canvas.width, 120);
+
+    // Animal parade in the background
+    const paradeX = (state.totalTime * 28) % (canvas.width + 220);
+    drawAnimalSilhouette(canvas.width - 40 - paradeX, canvas.height - 182, &quot;bunny&quot;, 0.95, &quot;#3a4650&quot;);
+    drawAnimalSilhouette(canvas.width + 120 - paradeX, canvas.height - 174, &quot;fox&quot;, 1.0, &quot;#404a4f&quot;);
+    drawAnimalSilhouette(canvas.width + 280 - paradeX, canvas.height - 178, &quot;bird&quot;, 1.1, &quot;#46505a&quot;);
+    drawAnimalSilhouette(canvas.width + 430 - paradeX, canvas.height - 170, &quot;cat&quot;, 0.9, &quot;#434a53&quot;);
+
+    // Soft ambient particles
+    for (let i = 0; i &lt; 30; i++) {
+      const sx = (i * 113) % canvas.width + 20;
+      const sy = 40 + ((i * 47) % 160) + Math.sin(state.totalTime * 1.2 + i) * 4;
+      const alpha = 0.035 + ((i % 5) * 0.03);
+      ctx.fillStyle = `rgba(210,200,185,${alpha})`;
+      ctx.beginPath(); ctx.arc(sx, sy, 1.5 + (i % 3), 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Foreground glow strip (replace grass with muted terrain)
+    ctx.fillStyle = '#17161c'; ctx.fillRect(0, canvas.height - 120, canvas.width, 120);
+
+    // Ground critters and paw prints
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    for (let i = 0; i &lt; 8; i++) {
+      const px = 40 + i * 110 + Math.sin(state.totalTime * 0.8 + i) * 6;
+      const py = canvas.height - 92 + (i % 2) * 8;
+      ctx.beginPath(); ctx.ellipse(px, py, 7, 5, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(px - 7, py - 6, 2, 0, Math.PI * 2); ctx.arc(px - 2, py - 9, 2, 0, Math.PI * 2); ctx.arc(px + 4, py - 8, 2, 0, Math.PI * 2); ctx.arc(px + 9, py - 4, 2, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  function drawBasket() {
+    const baseY = state.basketY - state.basketHeight;
+    const drawOne = (cx) =&gt; {
+      const x = cx - state.basketWidth / 2;
+      const y = baseY;
+      ctx.fillStyle = &quot;#f3efe7&quot;;
+      ctx.fillRect(x, y, state.basketWidth, state.basketHeight);
+      ctx.strokeStyle = &quot;#59626e&quot;;
+      ctx.lineWidth = 2;
+      for (let i = 1; i &lt; 6; i++) {
+        const lx = x + (state.basketWidth / 6) * i;
+        ctx.beginPath();
+        ctx.moveTo(lx, y);
+        ctx.lineTo(lx, y + state.basketHeight);
+        ctx.stroke();
+      }
+    };
+    const offsets = state.powerUps.multi.active ? [-160, 0, 160] : [0];
+    for (const off of offsets) drawOne(state.basketX + off);
+    if (state.shieldCharges &gt; 0) {
+      ctx.strokeStyle = &quot;rgba(120, 220, 255, 0.95)&quot;;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(state.basketX, state.basketY - state.basketHeight / 2 - 10, state.basketWidth / 1.7, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  function drawEgg(egg) {
+    const species = egg.species || pickAnimalSpecies(egg.kind);
+    const baseWidth = egg.kind === &quot;boss&quot; ? 24 : 12;
+    const baseHeight = egg.kind === &quot;boss&quot; ? 22 : 12;
+    const colorMap = {
+      bunny: &quot;#e8ddd4&quot;,
+      chick: &quot;#e7dfb5&quot;,
+      puppy: &quot;#dcc9b7&quot;,
+      kitten: &quot;#ddd8e2&quot;,
+      golden_bunny: &quot;#d8c46b&quot;,
+      golden_chick: &quot;#d3b957&quot;,
+      raccoon: &quot;#82848a&quot;,
+      skunk: &quot;#cfc8c1&quot;,
+      owl: &quot;#b8c1d4&quot;,
+      turtle: &quot;#9eb9aa&quot;,
+      fox: &quot;#c79265&quot;,
+      bear: &quot;#a97f62&quot;,
+    };
+    const fill = colorMap[species] || &quot;#f5f0de&quot;;
+    ctx.fillStyle = fill;
+
+    if (egg.kind === &quot;boss&quot;) {
+      ctx.beginPath();
+      ctx.ellipse(egg.x, egg.y, baseWidth * 1.3, baseHeight * 1.15, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = &quot;#ff6d6d&quot;;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(egg.x, egg.y, baseWidth * 1.05, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = &quot;#7a0916&quot;;
+      ctx.beginPath();
+      ctx.arc(egg.x - 8, egg.y - 5, 3, 0, Math.PI * 2);
+      ctx.arc(egg.x + 8, egg.y - 5, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = fill;
+      ctx.beginPath();
+      ctx.arc(egg.x - 12, egg.y - 18, 5, 0, Math.PI * 2);
+      ctx.arc(egg.x + 12, egg.y - 18, 5, 0, Math.PI * 2);
+      ctx.fill();
+      return;
+    }
+
+    ctx.beginPath();
+    ctx.ellipse(egg.x, egg.y, baseWidth * 1.0, baseHeight * 0.85, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (species === &quot;bunny&quot; || species === &quot;golden_bunny&quot;) {
+      ctx.beginPath();
+      ctx.ellipse(egg.x - 6, egg.y - 14, 3, 11, -0.15, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(egg.x + 6, egg.y - 14, 3, 11, 0.15, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = &quot;#7b4454&quot;;
+      ctx.beginPath(); ctx.arc(egg.x, egg.y + 2, 1.6, 0, Math.PI * 2); ctx.fill();
+    } else if (species === &quot;chick&quot; || species === &quot;golden_chick&quot;) {
+      ctx.fillStyle = &quot;#ff8f2b&quot;;
+      ctx.beginPath(); ctx.moveTo(egg.x, egg.y + 2); ctx.lineTo(egg.x + 4, egg.y + 6); ctx.lineTo(egg.x - 4, egg.y + 6); ctx.fill();
+      ctx.fillStyle = &quot;rgba(80,60,30,0.55)&quot;;
+      ctx.beginPath(); ctx.arc(egg.x - 3, egg.y - 1, 1.5, 0, Math.PI * 2); ctx.arc(egg.x + 3, egg.y - 1, 1.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = fill;
+      ctx.beginPath(); ctx.arc(egg.x, egg.y - 8, 4, 0, Math.PI * 2); ctx.fill();
+    } else if (species === &quot;puppy&quot;) {
+      ctx.beginPath(); ctx.arc(egg.x - 7, egg.y - 6, 4, 0, Math.PI * 2); ctx.arc(egg.x + 7, egg.y - 6, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = &quot;#5a3d2e&quot;; ctx.beginPath(); ctx.arc(egg.x, egg.y + 2, 1.4, 0, Math.PI * 2); ctx.fill();
+    } else if (species === &quot;kitten&quot;) {
+      ctx.beginPath(); ctx.moveTo(egg.x - 10, egg.y - 5); ctx.lineTo(egg.x - 5, egg.y - 14); ctx.lineTo(egg.x - 1, egg.y - 4); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(egg.x + 10, egg.y - 5); ctx.lineTo(egg.x + 5, egg.y - 14); ctx.lineTo(egg.x + 1, egg.y - 4); ctx.fill();
+      ctx.fillStyle = &quot;#6a507f&quot;; ctx.beginPath(); ctx.arc(egg.x, egg.y + 2, 1.3, 0, Math.PI * 2); ctx.fill();
+    } else if (species === &quot;raccoon&quot;) {
+      ctx.fillStyle = &quot;rgba(30,30,40,0.35)&quot;;
+      ctx.beginPath(); ctx.ellipse(egg.x, egg.y - 1, 7, 5, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = fill;
+      ctx.beginPath(); ctx.arc(egg.x, egg.y + 2, 1.3, 0, Math.PI * 2); ctx.fill();
+    } else if (species === &quot;skunk&quot;) {
+      ctx.strokeStyle = &quot;#6a3b22&quot;;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(egg.x, egg.y - 8); ctx.lineTo(egg.x, egg.y - 16); ctx.stroke();
+      ctx.fillStyle = fill;
+      ctx.beginPath(); ctx.arc(egg.x, egg.y + 2, 1.2, 0, Math.PI * 2); ctx.fill();
+    } else if (species === &quot;owl&quot;) {
+      ctx.fillStyle = &quot;rgba(255,255,255,0.3)&quot;;
+      ctx.beginPath(); ctx.arc(egg.x - 4, egg.y - 2, 3, 0, Math.PI * 2); ctx.arc(egg.x + 4, egg.y - 2, 3, 0, Math.PI * 2); ctx.fill();
+    } else if (species === &quot;turtle&quot;) {
+      ctx.fillStyle = &quot;rgba(50,90,70,0.32)&quot;;
+      ctx.beginPath(); ctx.arc(egg.x - 8, egg.y + 10, 3, 0, Math.PI * 2); ctx.arc(egg.x + 8, egg.y + 10, 3, 0, Math.PI * 2); ctx.fill();
+    } else if (species === &quot;fox&quot;) {
+      ctx.beginPath(); ctx.moveTo(egg.x - 10, egg.y - 2); ctx.lineTo(egg.x, egg.y - 14); ctx.lineTo(egg.x + 10, egg.y - 2); ctx.fill();
+      ctx.fillStyle = &quot;#fff2dc&quot;; ctx.beginPath(); ctx.arc(egg.x, egg.y + 2, 1.2, 0, Math.PI * 2); ctx.fill();
+    } else if (species === &quot;bear&quot;) {
+      ctx.fillStyle = &quot;#4b2f1f&quot;;
+      ctx.beginPath(); ctx.arc(egg.x - 8, egg.y - 6, 4, 0, Math.PI * 2); ctx.arc(egg.x + 8, egg.y - 6, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = &quot;#2d190f&quot;; ctx.beginPath(); ctx.arc(egg.x, egg.y + 2, 1.6, 0, Math.PI * 2); ctx.fill();
+    }
+
+    ctx.fillStyle = &quot;rgba(11, 29, 53, 0.45)&quot;;
+    ctx.beginPath();
+    ctx.arc(egg.x - 4, egg.y - 2, 1.6, 0, Math.PI * 2);
+    ctx.arc(egg.x + 4, egg.y - 2, 1.6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // --- Particle system (sparkles and blood) ---------------------------------
+  function spawnParticles(x, y, kind = 'sparkle', count = 16) {
+    for (let i = 0; i &lt; count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = kind === 'sparkle' ? rand(30, 260) : rand(80, 380);
+      const vx = Math.cos(angle) * speed;
+      const vy = Math.sin(angle) * speed * (kind === 'sparkle' ? 0.6 : 0.9);
+      const size = kind === 'sparkle' ? rand(1, 3) : rand(3, 8);
+      const life = kind === 'sparkle' ? rand(0.45, 0.95) : rand(0.6, 1.8);
+      const color = kind === 'sparkle' ? `rgba(255,${200 + Math.floor(rand(0,55))},${220 + Math.floor(rand(0,35))},1)` : `rgba(${160 + Math.floor(rand(0,80))},20,20,1)`;
+      state.particles.push({ x: x || canvas.width / 2, y: y || canvas.height - 24, vx, vy, size, life, age: 0, color, kind });
+    }
+  }
+
+  function updateParticles(dt) {
+    for (let i = state.particles.length - 1; i &gt;= 0; i--) {
+      const p = state.particles[i];
+      p.age += dt;
+      if (p.age &gt;= p.life) { state.particles.splice(i, 1); continue; }
+      // gravity only for blood
+      if (p.kind === 'blood') p.vy += 900 * dt;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      // apply slight drag
+      p.vx *= (p.kind === 'sparkle' ? 0.995 : 0.98);
+    }
+  }
+
+  function drawParticles() {
+    for (const p of state.particles) {
+      const t = 1 - p.age / p.life;
+      if (p.kind === 'sparkle') {
+        ctx.fillStyle = `rgba(240,236,228,${t})`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size * (0.6 + t * 1.4), 0, Math.PI * 2); ctx.fill();
+        // small glow
+        ctx.fillStyle = `rgba(196,182,165,${t * 0.12})`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size * 3 * t, 0, Math.PI * 2); ctx.fill();
+      } else {
+        // blood splatter
+        ctx.fillStyle = `rgba(150,50,56,${0.78 * t})`;
+        ctx.beginPath(); ctx.ellipse(p.x, p.y, p.size * (1 + (1 - t) * 0.6), p.size * 0.6, 0, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
+    drawBasket();
+    for (const egg of state.eggs) drawEgg(egg);
+    // draw particles on top of eggs but below HUD
+    drawParticles();
+    // Draw power-up HUD indicators
+    try {
+      if (state.powerUps.multi.active) { const remain = Math.max(0, Math.ceil(state.powerUps.multi.expires - state.totalTime)); ctx.fillStyle = &quot;#00ffff&quot;; ctx.font = &quot;14px monospace&quot;; ctx.fillText(`Pack: ${remain}s`, canvas.width - 150, 28); }
+      if (state.powerUps.slow.active) { const remain = Math.max(0, Math.ceil(state.powerUps.slow.expires - state.totalTime)); ctx.fillStyle = &quot;#b28cff&quot;; ctx.font = &quot;14px monospace&quot;; ctx.fillText(`Calm: ${remain}s`, canvas.width - 150, 48); }
+      if (state.missedEggsSinceLifeLoss) { ctx.fillStyle = &quot;#ffffff&quot;; ctx.font = &quot;12px monospace&quot;; ctx.fillText(`Wild misses: ${state.missedEggsSinceLifeLoss}/3`, 12, 28); }
+      // Gold counter
+      if (state.goldenEggsCollected) { ctx.fillStyle = &quot;#ffd24d&quot;; ctx.font = &quot;12px monospace&quot;; ctx.fillText(`Nest gold: ${state.goldenEggsCollected}/3`, 12, 46); }
+      if (state.comboCount &gt; 1) { ctx.fillStyle = &quot;#9fffd6&quot;; ctx.font = &quot;bold 13px monospace&quot;; ctx.fillText(`Combo x${state.comboCount}`, canvas.width / 2 - 45, 28); }
+      if (state.shieldCharges &gt; 0) { ctx.fillStyle = &quot;#8bd8ff&quot;; ctx.font = &quot;12px monospace&quot;; ctx.fillText(`Animal shield: ${state.shieldCharges}`, 12, 64); }
+      if (state.mode === &quot;daily&quot;) { ctx.fillStyle = &quot;#ffffff&quot;; ctx.font = &quot;12px monospace&quot;; ctx.fillText(`Daily den: ${state.dailyBest}`, canvas.width - 150, 64); }
+      if (state.bossWave.active) { ctx.fillStyle = &quot;#ffcccc&quot;; ctx.font = &quot;bold 13px monospace&quot;; ctx.fillText(`Boss Wave!`, canvas.width / 2 - 36, 50); }
+    } catch (e) {}
+  }
+
+  function loop(now) {
+    if (!state.running) return;
+    const dt = Math.min(0.033, (now - state.lastTickMs) / 1000);
+    state.lastTickMs = now;
+
+    update(dt);
+    render();
+
+    if (state.running) requestAnimationFrame(loop);
+  }
+
+  function onKey(e, down) {
+    const key = e.key.toLowerCase();
+    if (key === &quot;arrowleft&quot; || key === &quot;a&quot;) state.keys.left = down;
+    if (key === &quot;arrowright&quot; || key === &quot;d&quot;) state.keys.right = down;
+    if (key === &quot;p&quot; &amp;&amp; down) togglePause();
+  }
+
+  window.addEventListener(&quot;keydown&quot;, (e) =&gt; onKey(e, true));
+  window.addEventListener(&quot;keyup&quot;, (e) =&gt; onKey(e, false));
+
+  startBtn.addEventListener(&quot;click&quot;, startGame);
+  resumeBtn.addEventListener(&quot;click&quot;, () =&gt; {
+    if (state.phase === &quot;paused&quot;) {
+      setPaused(false);
+      return;
+    }
+    if (state.phase === &quot;shop&quot; || state.phase === &quot;gameover&quot;) {
+      startGame();
+    }
+  });
+  retryBtn.addEventListener(&quot;click&quot;, startGame);
+  exitBtn.addEventListener(&quot;click&quot;, returnToReadyScreen);
+  if (pauseBtn) pauseBtn.addEventListener(&quot;click&quot;, togglePause);
+  if (muteToggle) muteToggle.addEventListener(&quot;change&quot;, () =&gt; { state.settings.muted = muteToggle.checked; saveSettings(); });
+  if (volumeRange) volumeRange.addEventListener(&quot;input&quot;, () =&gt; { state.settings.volume = Number(volumeRange.value) / 100; saveSettings(); });
+  if (modeSelect) modeSelect.addEventListener(&quot;change&quot;, () =&gt; {
+    if (modeSelect.value === &quot;daily&quot;) {
+      overlayText.textContent = `Daily Challenge uses the seed ${getDailySeed()}.`;
+    }
+  });
+  if (buyPlatformBtn) buyPlatformBtn.addEventListener(&quot;click&quot;, () =&gt; purchaseUpgrade(&quot;platform&quot;));
+  if (buyShieldBtn) buyShieldBtn.addEventListener(&quot;click&quot;, () =&gt; purchaseUpgrade(&quot;shield&quot;));
+  if (buySpawnBtn) buySpawnBtn.addEventListener(&quot;click&quot;, () =&gt; purchaseUpgrade(&quot;spawn&quot;));
+
+  loadSavedData();
+  updateHud();
+  updateOverlayButtons(&quot;ready&quot;);
+  setCoachMessage(&quot;&quot;);
+  updateShopButtons();
+  render();
+
+  // Debug helper: simulate a missed non-rotten egg (useful for testing)
+  try {
+    window.__simulateMiss = function () {
+      state.missedEggsSinceLifeLoss = (state.missedEggsSinceLifeLoss || 0) + 1;
+      if (state.missedEggsSinceLifeLoss &gt;= 3) {
+        state.lives -= 1;
+        state.missedEggsSinceLifeLoss = 0;
+      }
+      updateHud();
+    };
+    // spawn a power-up egg near the basket for testing: __spawnPower('multi'|'slow'|'gold')
+    window.__spawnPower = function (kind) {
+      const egg = { x: state.basketX, y: state.basketY - 10, r: 12, speed: 140, kind: kind || 'multi', wobble: 1.2, t: 0 };
+      state.eggs.push(egg);
+    };
+  } catch (e) {}
+})();
+</code></pre>
+    </section>
+
+    <section class="file-block">
+      <h2>src/styles.css</h2>
+      <pre><code>:root {
+  --bg-1: #f4f7f0;
+  --bg-2: #e3efe0;
+  --ink: #17321f;
+  --accent: #2f7d45;
+  --accent-2: #f5b53f;
+  --danger: #b63a3a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: &quot;Trebuchet MS&quot;, Verdana, sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at 20% 10%, #ffffff 0%, var(--bg-1) 35%, var(--bg-2) 100%);
+}
+
+.app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  padding: 16px;
+}
+
+.top-bar {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.top-bar h1 {
+  margin: 0;
+  letter-spacing: 0.4px;
+}
+
+.stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.controls label {
+  font-weight: 700;
+}
+
+.controls select {
+  border: 1px solid rgba(23, 50, 31, 0.2);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.sound-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.controls input[type=&quot;range&quot;] {
+  width: 110px;
+}
+
+.game-wrap {
+  position: relative;
+  width: min(100%, 920px);
+  margin: 0 auto;
+  border: 3px solid var(--accent);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.1);
+}
+
+.boss-banner {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(182, 58, 58, 0.88);
+  color: #fff7f7;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 160ms ease, transform 160ms ease;
+  pointer-events: none;
+}
+
+.boss-banner.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.coach-message {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(11, 25, 70, 0.78);
+  color: #f7fbff;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.coach-message.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: linear-gradient(#c9ecff 0%, #d5f4ff 55%, #9fd489 56%, #84bf71 100%);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 22, 14, 0.72);
+  color: #f5fff2;
+  display: none;
+  text-align: center;
+  padding: 24px;
+}
+
+.overlay.show {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.shop-panel {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.shop-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.shop-status {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #d8f0d6;
+}
+
+.achievement-strip {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.achievement-chip {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(47, 125, 69, 0.12);
+  border: 1px solid rgba(47, 125, 69, 0.2);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.overlay h2 {
+  margin: 0 0 10px;
+  font-size: 2rem;
+}
+
+.overlay p {
+  margin: 0 0 14px;
+  max-width: 520px;
+}
+
+button {
+  background: var(--accent-2);
+  border: 0;
+  border-radius: 999px;
+  color: #2a230f;
+  font-weight: 700;
+  padding: 10px 18px;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(1.05);
+}
+
+.help {
+  width: min(100%, 920px);
+  margin: 0 auto;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .top-bar {
+    justify-content: center;
+  }
+
+  .controls {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .stats {
+    justify-content: center;
+  }
+}
+</code></pre>
+    </section>
+  </div>
+</body>
+</html>
